@@ -59,10 +59,10 @@ function generateSymbol() {
 }
 
 function clacStrength() {
-    let hasUpper = flase;
-    let hasLower = flase;
-    let hasNumber = flase;
-    let hasSymbol = flase;
+    let hasUpper = false;
+    let hasLower = false;
+    let hasNumber = false;
+    let hasSymbol = false;
 
     if (uppercaseCheck.checked) hasUpper = true;
     if (lowercaseCheck.checked) hasLower = true;
@@ -106,28 +106,19 @@ inputSlider.addEventListener('input', (e) => {
 });
 
 // generating btn for copy
-// copyBtn.addEventListener('click', () => {
-//     if (passwordDisplay.value) {
-//         copyContent();
-//     } else {
-//         console.log("Generate Password First!!")
-//     }
-// });
-
-
-    copyBtn.addEventListener('click', () => {
-        if (passwordDisplay.value) {
-            copyContent();
-        } else {
-            console.log("Generate Password First!!");
-        }
-    });
- 
+copyBtn.addEventListener('click', () => {
+    if (passwordDisplay.value) {
+        copyContent();
+    } else {
+        console.log("Generate Password First!!")
+    }
+});
 
 allCheckbox.forEach((checkbox) => {
     checkbox.addEventListener('change', handleCheckboxChange);
 });
-
+// move 
+handleSlider();
 function handleCheckboxChange() {
     checkCount = 0;
     allCheckbox.forEach((checkbox) => {
@@ -187,7 +178,7 @@ generateBtn.addEventListener('click', () => {
     }
 
     // shuffle the password
-    password = shufflePassword();
+    password = shufflePassword(Array.from(password));
 
     // display in UI
     passwordDisplay.value = password;
@@ -206,9 +197,9 @@ function shufflePassword(array) {
         array[i] = array[j];
         array[j] = temp;
     }
-    let str = "";
-    array.forEach((el) => (str + el));
+    // let str = "";
+    // array.forEach((el) => (str + el));
+    // return str;
+    let str = array.join('');
     return str;
-
-
 }

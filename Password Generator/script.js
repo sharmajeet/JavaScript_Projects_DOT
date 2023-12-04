@@ -12,7 +12,7 @@ const generateBtn = document.querySelector(".generate-button");
 // query selector all for all checkbox data
 const allCheckbox = document.querySelectorAll("input[type = checkbox]");
 // string for diffrent symbols
-const symbols = "~!@#$%^&*()_+{}[]/=/<>,?;";
+const symbols = "~!@#$%^&*()_+{}[]/=<>,?;";
 
 // defaul values
 let password = "";
@@ -20,15 +20,20 @@ let passwordLength = 10;
 let checkCount = 0;
 // set strength circle color to "gray"
 handleSlider();
+setIndicator('#ccc');
 
 // function - set password length
 function handleSlider() {
   inputSlider.value = passwordLength;
   lengthDisplay.innerText = passwordLength;
+  const min= inputSlider.min;
+  const max = inputSlider.max;
+  inputSlider.style.backgroundSize = ((passwordLength - min) * 100 / (max - min)) + "% 100%";
 }
 
 function setIndicator(color) {
   indicator.style.backgroundColor = color;
+  indicator.style.boxShadow = `0px 0px 12px 1px ${color}`;
   // shadow
 }
 

@@ -1,0 +1,11 @@
+/* properties for ccurrent tab  */
+.tab.current-tab {
+  background-color: rgba(219, 226, 239, 0.5);
+  border-radius: 4px;
+}
+/* made changes in form container active property for visible on screen */
+.form-container.active {
+  opacity: 1;
+  scale: 1;
+  display: flex;
+}

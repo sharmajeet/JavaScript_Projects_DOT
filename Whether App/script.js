@@ -43,6 +43,7 @@ const dashboardContainer = document.querySelector(".user-info-weather");
 // data for tab switching 
 let currentTab = userTab;
 currentTab.classList.add("current-tab");
+getFromSessionStrorage();
 
 // functioning of switching tab
 
@@ -104,9 +105,9 @@ async function featchUserWeatherInfo(cordinates) {
     // API CALL
     try {
         const resp = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${API_KEY}`);
-
         // first convert data into json formate
         const data = await resp.json();
+        console.log(data);
 
         // after data fetching we disapering loader and display weather data container dashboard
         loadingContainer.classList.remove("active");
@@ -114,7 +115,7 @@ async function featchUserWeatherInfo(cordinates) {
         dashboardContainer.classList.add("active");
 
         // now we render fetched data on ui screen
-        renderWheatherInfo(data);
+        renderWeatherInfo(data);
 
     } catch (e) {
         loadingContainer.classList.remove("active");
@@ -124,7 +125,7 @@ async function featchUserWeatherInfo(cordinates) {
 }
 
 // render function
-async function renderWheatherInfo(weatherInfo) {
+async function renderWeatherInfo(weatherInfo) {
     const cityName = document.querySelector("[data-cityName]");
     const countryIcon = document.querySelector("[data-countryIcon]");
     const weatherDesc = document.querySelector("[data-weatherDesc]");
@@ -134,37 +135,23 @@ async function renderWheatherInfo(weatherInfo) {
     const humidity = document.querySelector("[data-humidity]");
     const clouds = document.querySelector("[data-cloudiness]");
 
-// fetch values from wheather 
-    // cityName.innerText = weatherInfo?.city?.name;
-    // countryIcon.src = `https://flagcdn.com/144*108/${weatherInfo?.city?.country.toLowerCase()}.png`;
-    // weatherDesc.innerText = weatherInfo?.list?.[0]?.description;
-    // weatherIcon.src = `http://openweathermap.org/img/w/${weatherInfo?.list?.[0]?.icon}.png`;
-    // temprature.innerText = weatherInfo?.list?.main?.temp;
-    // windspeed.innerText = weatherInfo?.list?.wind?.speed;
-    // humidity.innerText = weatherDesc?.list?.[3]?.main.humidity;
-    // clouds.innerText = weatherDesc?.list?.[3].clouds?.all;
-    
-    cityName.innerText = weatherInfo.name;
-    countryIcon.src = `https://flagcdn.com/144x108/${weatherInfo?.sys?.country.toLowerCase()}.png`;
-    weatherDesc.innerText = weatherInfo?.weather?.[0]?.description;
-    weatherIcon.src = `http://openweathermap.org/img/w/${weatherInfo?.weather?.[0]?.icon}.png`;
-    temprature.innerText = weatherInfo?.main?.temp;
-    windspeed.innerText = weatherInfo?.list?.wind?.speed;
-    humidity.innerText = weatherInfo?.main?.humidity;
-    clouds.innerText = weatherInfo?.clouds?.all;
-    console.log(weatherInfo);
-    console.log(cityName);
-    console.log(temprature);
-    
+    let kelvinToCelcius = Math.floor(((weatherInfo?.list?.[0]?.main?.temp - 273.5)), 2);
 
-    
+    cityName.innerText = weatherInfo?.city?.name;
+    countryIcon.src = `https://flagcdn.com/144x108/${weatherInfo?.city?.country.toLowerCase()}.png`;
+
+    weatherDesc.innerText = weatherInfo?.list?.[0]?.weather?.[0]?.description;
+    weatherIcon.src = `http://openweathermap.org/img/w/${weatherInfo?.list?.[0]?.weather?.[0]?.icon}.png`;
+
+    temprature.innerText = `${kelvinToCelcius} °C`;
+    windspeed.innerText = `${weatherInfo?.list?.[0]?.wind?.speed} m/s`;
+    humidity.innerText = `${weatherInfo?.list?.[1]?.main?.humidity}%`;
+    clouds.innerText = `${weatherInfo?.list?.[0]?.clouds?.all}%`;
+
+
 
 }
 
-
-// listner for grant access listner
-const grantAccessBtn = document.querySelector("[data-grantAcess]");
-grantAccessBtn.addEventListener("click", getLocation);
 
 function getLocation() {
     if (navigator.geolocation) {
@@ -174,31 +161,49 @@ function getLocation() {
     }
 }
 
-async function showPosition(position){
+async function showPosition(position) {
     const userCordinates = {
-        lat:position.coords.latitude,
-        lon:position.coords.longitude
+        lat: position.coords.latitude,
+        lon: position.coords.longitude
     }
-    sessionStorage.setItem("user-cordinates",JSON.stringify(userCordinates));
+    sessionStorage.setItem("user-cordinates", JSON.stringify(userCordinates));
     featchUserWeatherInfo(userCordinates);
     console.log(userCordinates);
 }
 
-async function featchUserWeatherInfo(city){
+// listner for grant access listner
+const grantAccessBtn = document.querySelector("[data-grantAcess]");
+grantAccessBtn.addEventListener("click", getLocation);
+
+const searchInput = document.querySelector("[data-searchInput]");
+
+searchFormContainer.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let cityName = searchInput.value;
+
+    if (cityName === "") {
+        return;
+    } else {
+        // function that call with argument as cityname
+        fetchSearchWeatherInfo(cityName);
+    }
+});
+
+async function fetchSearchWeatherInfo(city) {
     loadingContainer.classList.add("active");
     dashboardContainer.classList.remove("active");
     loadingContainer.classList.remove("active");
 
-    // api call
-    try{
-        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`)
+    try {
+        const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}`);
         const data = await response.json();
-        loadingContainer.classList.remove("active");
+        locationContainer.classList.remove("active");
         dashboardContainer.classList.add("active");
-        renderWheatherInfo(data);
-    }
-    catch(e){
-        console.log("error at featchUserWeatherInfo.");
-    }
+        renderWeatherInfo(data);
+    } catch (e) {
+        console.log("Enter a valid city name!!");
+        console.log(e)
 
+    }
 }
+

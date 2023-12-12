@@ -20,7 +20,18 @@
   --colorLight1: #dbe2ef;
   --colorLight2: #f9f7f7;
 }
-
+.errorContainer {
+  display: none;
+}
+.errorContainer.active {
+  display: flex;
+  max-width: 550px;
+  justify-content: center;
+  margin: 0 auto;
+  width: 90%;
+  flex-wrap: wrap;
+  margin-top: 4rem;
+}
 .wrapper {
   width: 100vw;
   height: 100vh;
@@ -61,7 +72,7 @@ h1 {
 }
 
 .weather-container {
- margin-block:4rem;
+  margin-block: 4rem;
 }
 
 .btn {
@@ -169,15 +180,15 @@ h1 {
 
 .parameter {
   display: flex;
- 
+
   flex-direction: column;
   gap: 5px 0;
   width: 30%;
   max-width: 200px;
   background-color: rgba(219, 226, 239, 0.5);
   border-radius: 5px;
-  padding:1rem 2rem;
-  
+  padding: 1rem 2rem;
+
   align-items: center;
 }
 
@@ -212,7 +223,7 @@ h1 {
   display: flex;
 }
 
-.form-container input{
+.form-container input {
   all: unset;
   width: calc(100% - 80px);
   height: 40px;
@@ -220,16 +231,15 @@ h1 {
   background-color: rgba(219, 226, 239, 0.5);
   border-radius: 10px;
 }
-.form-container input::placeholder{
+.form-container input::placeholder {
   color: rgba(255, 255, 255, 0.7);
-
 }
 
-.form-container input:focus{
+.form-container input:focus {
   outline: 3px solid rgba(255, 255, 255, 0.7);
 }
 
-.form-container .btn{
+.form-container .btn {
   padding: unset;
   width: 40px;
   height: 40px;
@@ -238,6 +248,5 @@ h1 {
   justify-content: center;
   border-radius: 100%;
   margin-bottom: 1px;
-  margin-left: 8px;;
-
+  margin-left: 8px;
 }

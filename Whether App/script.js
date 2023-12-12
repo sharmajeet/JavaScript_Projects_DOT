@@ -26,7 +26,8 @@ const API_KEY = "8d3e8cd1814c2e7715e927ea987f10b6";
 // fetching tabs
 const userTab = document.querySelector("[data-userWeather]");
 const searchTab = document.querySelector("[data-searchWeather]");
-
+const errorContainer = document.querySelector(".errorContainer");
+const errorMesssage = document.querySelector("[message]")
 // parent container
 const parentContainer = document.querySelector(".weather-container");
 
@@ -182,9 +183,15 @@ searchFormContainer.addEventListener("submit", (e) => {
     let cityName = searchInput.value;
 
     if (cityName === "") {
+        // koi input na male to
+        errorContainer.classList.add("active");
+        dashboardContainer.classList.remove("active")
         return;
     } else {
         // function that call with argument as cityname
+
+        errorContainer.classList.remove("active")
+        dashboardContainer.classList.add("active")
         fetchSearchWeatherInfo(cityName);
     }
 });
@@ -197,8 +204,21 @@ async function fetchSearchWeatherInfo(city) {
     try {
         const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}`);
         const data = await response.json();
-        locationContainer.classList.remove("active");
-        dashboardContainer.classList.add("active");
+        console.log(data)
+        const message = data?.message;
+
+
+        if (data?.cod == "404") {
+            dashboardContainer.classList.remove("active");
+            errorContainer.classList.add("active");
+            errorMesssage.innerText = "Error Message : " + message;
+
+            console.log("city name is invalid")
+        } else {
+
+            locationContainer.classList.remove("active");
+            dashboardContainer.classList.add("active");
+        }
         renderWeatherInfo(data);
     } catch (e) {
         console.log("Enter a valid city name!!");
